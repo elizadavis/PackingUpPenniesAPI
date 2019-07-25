@@ -9,12 +9,19 @@ const removeBlanks = require('../../lib/remove_blank_fields')
 
 const router = express.Router()
 
-router.get('/trips', requireToken, (req, res, next) => {
+router.get('/trips', (req, res, next) => {
   Trip.find()
     .then(trips => {
       return trips.map(trip => trip.toObject())
     })
     .then(trips => res.status(200).json({ trips: trips }))
+    .catch(next)
+})
+
+router.get('/trips/:id', (req, res, next) => {
+  Trip.findById(req.params.id)
+    .then(handle404)
+    .then(trip => res.status(200).json({ trip: trip.toObject() }))
     .catch(next)
 })
 
