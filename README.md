@@ -54,7 +54,7 @@ My original goal for this project was to include a second resource, "expenses," 
 
 ERD:
 
-![ERD](./ERD.jpg)
+![ERD](./ERD.JPG)
 
 
 ### Authentication
