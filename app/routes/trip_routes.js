@@ -9,8 +9,8 @@ const removeBlanks = require('../../lib/remove_blank_fields')
 
 const router = express.Router()
 
-router.get('/trips', (req, res, next) => {
-  Trip.find()
+router.get('/trips', requireToken, (req, res, next) => {
+  Trip.find({ owner: req.user.id })
     .then(trips => {
       return trips.map(trip => trip.toObject())
     })
@@ -18,10 +18,13 @@ router.get('/trips', (req, res, next) => {
     .catch(next)
 })
 
-router.get('/trips/:id', (req, res, next) => {
+router.get('/trips/:id', requireToken, (req, res, next) => {
   Trip.findById(req.params.id)
     .then(handle404)
-    .then(trip => res.status(200).json({ trip: trip.toObject() }))
+    .then(trip => {
+      requireOwnership(req, trip)
+      return res.status(200).json({ trip: trip.toObject() })
+    })
     .catch(next)
 })
 
